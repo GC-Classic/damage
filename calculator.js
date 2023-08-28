@@ -145,7 +145,7 @@ class Calculator extends HTMLElement {
     }
     save() {
         let stats = [...this.shadowRoot.Q('#stats input[type=number]')].reduce((obj, input) => ({...obj, [input.name]: input.value}), {});
-        ['normal','special'].forEach(s => stats[`skill.${s}`] = this.shadowRoot.Q(`#stats input[name=skill].${s}`);
+        ['normal','special'].forEach(s => stats[`skill.${s}`] = this.shadowRoot.Q(`#stats input[name=skill].${s}`));
         let buffs = [...this.shadowRoot.querySelectorAll('#buffs input:checked')].map(input => input.id);
         buffs = this.shadowRoot.Q('#buffs input[type=number]').reduce((obj, input) => ({...obj, [input.id]: input.value}), buffs);
         let data = {stats, buffs, name: this.shadowRoot.Q('input[name=name]').value};
@@ -155,8 +155,9 @@ class Calculator extends HTMLElement {
         this.id = this.saved.id;
         this.shadowRoot.Q('input[name=name]').value = this.saved.name;
         Object.entries(this.saved.stats).forEach(([name, value]) => name.includes('.') ?
-            this.shadowRoot.Q(`#stats input[name=${name.split('.')[0]}].${name.split('.')[1]}`).value = value);
-            this.shadowRoot.Q(`#stats input[name=${name}]`).value = value);
+            this.shadowRoot.Q(`#stats input[name=${name.split('.')[0]}].${name.split('.')[1]}`).value = value :
+            this.shadowRoot.Q(`#stats input[name=${name}]`).value = value
+        );
         Object.entries(this.saved.buffs).forEach(([id, value]) => /^\d+/.test(id) ? 
             this.shadowRoot.Q(`#${value}`).checked = true : 
             this.shadowRoot.Q(`#${id}`).value = value
