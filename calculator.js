@@ -83,7 +83,7 @@ class Calculator extends HTMLElement {
             <li class="normal"><prop-icon prop="CAD" no></prop-icon><prop-icon prop="HS"></prop-icon><output></output>
             <li><prop-icon prop="CAD"></prop-icon><prop-icon prop="HS" no></prop-icon><output></output>
             <li class="normal"><prop-icon prop="CAD"></prop-icon><prop-icon prop="HS"></prop-icon><output></output>
-            <li><span>Average</span><output></output>
+            <li><span>Average damage</span><span>平均傷害</span><output></output>
         </ul>`;
     }
     connectedCallback() {
