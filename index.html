@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<title>Damage calculator</title>
+<meta charset="utf-8">
+<meta name=viewport content='width=device-width,initial-scale=1,maximum-scale=1'>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Monda:wght@700&family=Shippori+Antique&family=Sofia+Sans+Condensed:wght@600;800&display=swap" rel="stylesheet">
+<script src="/common.js"></script>
+<script src="/rune.js"></script>
+<script src="calculator.js"></script>
+<link rel="stylesheet" href="/common.css">
+<style>
+    main {display:flex; justify-content:space-evenly; flex-wrap:wrap;}
+</style>
+<main hidden></main>
+<script>
+    onhashchange(location.hash.substring(1) || 'en');
+    customElements.whenDefined('rune-calculator').then(() => Q('main').hidden = false);
+</script>
+<script>
+    DB.show('damage');
+
+    const Buff = {
+        rune: {
+            'fury-1':{A:5},'fury-2':{A:5},'fight-1':{A:2.5},'fight-2':{A:2.5},
+            rage:{A:10},hunt:{A:10},punish:{A:10},
+            'roar-1':{HS:10},'roar-2':{HS:10}
+        },
+        title: {
+            t1:{A:10,CAC:1.5},t2:{A:5,CAC:1.5},t3:{A:10,CAC:1.5},t4:{A:5,CAC:1.5},t5:{A:5,CAC:1.5},
+        },
+        item: {
+            i1:{A:10},i2:{A:10},i3:{A:10},i4:{A:15},i5:{A:15},
+        },
+    }
+    const Damage = ({A, SA, CAC, CAD, HSC, HS, TD, TR, Lv, monsterLv, skill, buff}, normal = true) => {
+        let seniority = Math.max(Lv - monsterLv - 5, 0);
+        let NTD = isNaN(TD) ? 0 : Math.max(TD - TR, 0);
+        CAC += buff?.CAC || 0;
+        [CAC, CAD] = isNaN(TD) ? [Math.min(CAC, 100), CAD] : [Math.min(Math.max(0, CAC - 20), 100), Math.max(-50, CAD - 250)];
+        
+        let damage = {};
+        damage.HS = Damage.HS(HS, NTD, buff, normal);
+        damage.basic = Damage.basic(A, SA, skill, NTD, seniority, buff, normal);
+        damage.critical = Damage.critical(damage.basic, CAD);
+        damage.average = Damage.average(damage.basic, CAC, damage.critical, HSC, damage.HS);
+        return damage;
+    }
+    Object.assign(Damage, {
+        basic: (A, SA, skill, NTD, seniority, buff, normal) =>
+            (normal ? A*Damage.normal : (A+SA)*Damage.special) * (1 + buff.A/100) * skill * (1 + .02*seniority) * (1 - NTD/100),
+
+        HS: (HS, NTD, buff, normal) => HS * (1 + buff.HS/100) * (1 - NTD/100) * normal,
+        critical: (basic, CAD) => basic * Math.max(1, 1.5 + CAD/100),
+        average: (basic, CAC, critical, HSC, HS) => CAC/100*critical + (1 - CAC/100)*basic + HSC/100*HS,
+
+        normal: .0168, special: .0054687
+    });
+</script>
