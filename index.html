@@ -12,9 +12,8 @@
     main {display:flex; justify-content:space-evenly; flex-wrap:wrap;}
 </style>
 <main hidden></main>
-<footer>
-    By V. Man (@beybladeburst)
-</footer>
+<footer>By V. Man (@beybladeburst)</footer>
+
 <script>
     onhashchange(location.hash.substring(1) || 'en');
     customElements.whenDefined('damage-calculator').then(() => Q('main').hidden = false);
