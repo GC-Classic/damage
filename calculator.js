@@ -44,7 +44,7 @@ class Calculator extends HTMLElement {
                 <span>Hell spear chance</span><span>地獄之矛機率</span> <input name="HSC" step=".01" min="10" placeholder="10">
             </label>
             <label class="icon normal">
-                <span>Hell spear damage</span>地獄之矛傷害</span> <input name="HS" placeholder="440">
+                <span>Hell spear damage</span></span>地獄之矛傷害</span> <input name="HS" placeholder="440">
             </label>
             <data id="HS" class="normal"></data>
             <label class="icon">
@@ -145,7 +145,7 @@ class Calculator extends HTMLElement {
     }
     save() {
         let stats = [...this.shadowRoot.Q('#stats input[type=number]')].reduce((obj, input) => ({...obj, [input.name]: input.value}), {});
-        ['normal','special'].forEach(s => stats[`skill.${s}`] = this.shadowRoot.Q(`#stats input[name=skill].${s}`));
+        ['normal','special'].forEach(s => stats[`skill.${s}`] = this.shadowRoot.Q(`#stats input[name=skill].${s}`).value);
         let buffs = [...this.shadowRoot.querySelectorAll('#buffs input:checked')].map(input => input.id);
         buffs = this.shadowRoot.Q('#buffs input[type=number]').reduce((obj, input) => ({...obj, [input.id]: input.value}), buffs);
         let data = {stats, buffs, name: this.shadowRoot.Q('input[name=name]').value};
