@@ -50,7 +50,7 @@ class Calculator extends HTMLElement {
             <label class="icon">
                 <span>Taint resistance</span><span>侵蝕抗性</span> <input name="TR" step=".01" placeholder="27.67">
             </label>
-            <label class="normal">>
+            <label class="normal">
                 <a href="https://docs.google.com/spreadsheets/d/1FGxKHQuwz_Jx-GdYd6647FiAE9UbS6mZgufXor9_DZk" target="_blank"><span>Skill coefficient</span><span>技能傷害係數</span></a>
                 <input name="skill" class="normal" step=".01" placeholder="4.55">
             </label>
