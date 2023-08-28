@@ -34,9 +34,9 @@
     }
     const Damage = ({A, SA, CAC, CAD, HSC, HS, TD, TR, Lv, monsterLv, skill, buff}, normal = true) => {
         let seniority = Math.max(Lv - monsterLv - 5, 0);
-        let NTD = isNaN(TD) ? 0 : Math.max(TD - TR, 0);
+        let NTD = Math.max(TD - TR, 0);
         CAC += buff?.CAC || 0;
-        [CAC, CAD] = isNaN(TD) ? [Math.min(CAC, 100), CAD] : [Math.min(Math.max(0, CAC - 20), 100), Math.max(-50, CAD - 250)];
+        [CAC, CAD] = TD === 0 ? [Math.min(CAC, 100), CAD] : [Math.min(Math.max(0, CAC - 20), 100), Math.max(-50, CAD - 250)];
         
         let damage = {};
         damage.HS = Damage.HS(HS, NTD, buff, normal);
