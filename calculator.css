@@ -61,7 +61,7 @@ menu .action {
     font-size:1.5em;
 }
 #stats>label {
-    display:flex; justify-content:space-between; align-items:center;
+    display:flex; justify-content:space-between; align-items:baseline;
     grid-column:2;
 }
 #stats input[type=number] {
@@ -154,13 +154,13 @@ ul {
     font-size:1.5em;
     margin-top:.5em;
 }
-ul li {text-align:right;}
+ul li {text-align:right; font-size:.8em;}
 ul li>* {vertical-align:middle;}
-ul li>:not(output) {font-size:.8em;}
+ul span {line-height:1.5;}
 ul output {
     display:block;
     color:var(--bg); background:var(--fg);
-    text-align:center;
+    text-align:center; font-size:1.25em;
 }
 ul li:last-child {
     grid-area:3/1/4/5;
