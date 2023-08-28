@@ -167,11 +167,11 @@ Object.assign(Calculator, {
     build: (name, type, src) => 
         Object.entries(Buff[name]).map(([id, value]) => [
             E('input', {id, type, ...type ? {name} : {}, value: JSON.stringify(value)}), 
-            E('label', [E('img', {src: `buffs/${src(id)}`})], {htmlFor: id})
+            E('label', [E('img', {src: src(id)})], {htmlFor: id})
         ]).flat(),
     rune: () => Calculator.build('rune', 'checkbox', id => `/rune/set/${id.split('-')[0]}.webp`),
-    item: () => Calculator.build('item', 'checkbox', id => `${id}.png`),
-    title: () => Calculator.build('title', 'radio', id => `${id}.webp`),
+    item: () => Calculator.build('item', 'checkbox', id => `buffs/${id}.png`),
+    title: () => Calculator.build('title', 'radio', id => `buffs/${id}.webp`),
 
     add: data => {
         typeof data == 'boolean' && (data = null);
