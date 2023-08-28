@@ -67,7 +67,7 @@ class Calculator extends HTMLElement {
                 </label>
                 <label class="special">
                     <span>Special damage</span>
-                    <img src="buffs/cp2.png"><input id="cp-special" max="100" value="45"><data>0.2</data>
+                    <img src="buffs/cp2.png"><input id="cp-special" max="100"><data>0.2</data>
                 </label>
                 <label>
                     <span>Boss damage</span>
