@@ -20,7 +20,7 @@ class Calculator extends HTMLElement {
                 <span>Monster Level</span><span>怪物等級</span> <input name="monsterLv" placeholder="85+">
             </label>
             <label>
-                <span>Taint debuff</span><span>侵蝕減益</span> <input name="TD" step=".01" placeholder="Leave empty if no">
+                <span>Taint debuff</span><span>侵蝕減益</span> <input name="TD" step=".01" placeholder="0">
             </label>
             <label>
                 <span>Charcter level</span><span>角色等級</span> <input name="Lv" placeholder="85">
