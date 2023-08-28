@@ -12,65 +12,65 @@ class Calculator extends HTMLElement {
         </menu>
         <form id="stats">
             <div>
-                <b><span>Normal</span></b>
+                <b><span>Normal</span><span>普通攻擊</span></b>
                 <input type="checkbox" id="toggle"><label for="toggle"></label>
-                <b><span>Special</span></b>
+                <b><span>Special</span><span>必殺攻擊</span></b>
             </div>
             <label>
-                Monster Level <input name="monsterLv" placeholder="85+">
+                <span>Monster Level</span><span>怪物等級</span> <input name="monsterLv" placeholder="85+">
             </label>
             <label>
-                Taint debuff <input name="TD" step=".01" placeholder="Leave empty if no">
+                <span>Taint debuff</span><span>侵蝕減益</span> <input name="TD" step=".01" placeholder="Leave empty if no">
             </label>
             <label>
-                Level <input name="Lv" placeholder="85">
+                <span>Charcter level</span><span>角色等級</span> <input name="Lv" placeholder="85">
             </label>
             <label class="icon">
-                Attack <input name="A" placeholder="28469">
+                <span>Attack</span><span>攻擊力</span> <input name="A" placeholder="28469">
             </label>
             <data id="A"></data>
             <label class="icon special">
-                Special attack <input name="SA" placeholder="6748">
+                <span>Special attack</span><span>必殺攻擊力</span> <input name="SA" placeholder="6748">
             </label>             
             <label class="icon">
-                Critical chance <input name="CAC" step=".01" placeholder="96.21">
+                <span>Critical chance</span><span>暴擊機率</span> <input name="CAC" step=".01" placeholder="96.21">
             </label>
             <data id="CAC"></data>
             <label class="icon">
-                Critical damage <input name="CAD" step=".01" placeholder="736.04">
+                <span>Critical damage</span><span>暴擊傷害</span> <input name="CAD" step=".01" placeholder="736.04">
             </label>
             <data id="CAD"></data>
             <label class="icon normal">
-                Hell spear chance <input name="HSC" step=".01" min="10" placeholder="10">
+                <span>Hell spear chance</span><span>地獄之矛機率</span> <input name="HSC" step=".01" min="10" placeholder="10">
             </label>
             <label class="icon normal">
-                Hell spear damage <input name="HS" placeholder="440">
+                <span>Hell spear damage</span>地獄之矛傷害</span> <input name="HS" placeholder="440">
             </label>
             <data id="HS" class="normal"></data>
             <label class="icon">
-                Taint resistance <input name="TR" step=".01" placeholder="27.67">
+                <span>Taint resistance</span><span>侵蝕抗性</span> <input name="TR" step=".01" placeholder="27.67">
             </label>
-            <label class="normal">
-                <a href="https://docs.google.com/spreadsheets/d/1FGxKHQuwz_Jx-GdYd6647FiAE9UbS6mZgufXor9_DZk" target="_blank">Skill coefficient</a>
+            <label class="normal">>
+                <a href="https://docs.google.com/spreadsheets/d/1FGxKHQuwz_Jx-GdYd6647FiAE9UbS6mZgufXor9_DZk" target="_blank"><span>Skill coefficient</span><span>技能傷害係數</span></a>
                 <input name="skill" class="normal" step=".01" placeholder="4.55">
             </label>
             <label class="special">
-                <a href="https://docs.google.com/spreadsheets/d/1FGxKHQuwz_Jx-GdYd6647FiAE9UbS6mZgufXor9_DZk" target="_blank">Skill coefficient</a>
+                <a href="https://docs.google.com/spreadsheets/d/1FGxKHQuwz_Jx-GdYd6647FiAE9UbS6mZgufXor9_DZk" target="_blank"><span>Skill coefficient</span><span>技能傷害係數</span></a>
                 <input name="skill" class="special" step=".01" placeholder="113.4">
             </label>
         </form>
         <form id="buffs">
             <fieldset id="chase">
                 <label>
-                    <span>All damage</span>
+                    <span>All damage</span><span>全部傷害</span>
                     <img src="buffs/cp1.png"><input id="cp-all" max="50"><data>0.15</data>
                 </label>
                 <label class="special">
-                    <span>Special damage</span>
+                    <span>Special damage</span><span>必殺傷害</span>
                     <img src="buffs/cp2.png"><input id="cp-special" max="100"><data>0.2</data>
                 </label>
                 <label>
-                    <span>Boss damage</span>
+                    <span>Boss damage</span><span>Boss 傷害</span>
                     <img src="buffs/cp3.png"><input id="cp-boss" max="50"><data>0.25</data>
                 </label>
             </fieldset>
@@ -145,6 +145,7 @@ class Calculator extends HTMLElement {
     }
     save() {
         let stats = [...this.shadowRoot.Q('#stats input[type=number]')].reduce((obj, input) => ({...obj, [input.name]: input.value}), {});
+        ['normal','special'].forEach(s => stats[`skill.${s}`] = this.shadowRoot.Q(`#stats input[name=skill].${s}`);
         let buffs = [...this.shadowRoot.querySelectorAll('#buffs input:checked')].map(input => input.id);
         buffs = this.shadowRoot.Q('#buffs input[type=number]').reduce((obj, input) => ({...obj, [input.id]: input.value}), buffs);
         let data = {stats, buffs, name: this.shadowRoot.Q('input[name=name]').value};
@@ -153,7 +154,9 @@ class Calculator extends HTMLElement {
     fill() {
         this.id = this.saved.id;
         this.shadowRoot.Q('input[name=name]').value = this.saved.name;
-        Object.entries(this.saved.stats).forEach(([name, value]) => this.shadowRoot.Q(`#stats input[name=${name}]`).value = value);
+        Object.entries(this.saved.stats).forEach(([name, value]) => name.includes('.') ?
+            this.shadowRoot.Q(`#stats input[name=${name.split('.')[0]}].${name.split('.')[1]}`).value = value);
+            this.shadowRoot.Q(`#stats input[name=${name}]`).value = value);
         Object.entries(this.saved.buffs).forEach(([id, value]) => /^\d+/.test(id) ? 
             this.shadowRoot.Q(`#${value}`).checked = true : 
             this.shadowRoot.Q(`#${id}`).value = value
