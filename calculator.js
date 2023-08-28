@@ -44,7 +44,7 @@ class Calculator extends HTMLElement {
                 <span>Hell spear chance</span><span>地獄之矛機率</span> <input name="HSC" step=".01" min="10" placeholder="10">
             </label>
             <label class="icon normal">
-                <span>Hell spear damage</span></span>地獄之矛傷害</span> <input name="HS" placeholder="440">
+                <span>Hell spear damage</span><span>地獄之矛傷害</span> <input name="HS" placeholder="440">
             </label>
             <data id="HS" class="normal"></data>
             <label class="icon">
