@@ -39,17 +39,19 @@
             i1:{A:10},i2:{A:10},i3:{A:10},i4:{A:15},i5:{A:15},
         },
     }
-    const Damage = ({A, SA, CAC, CAD, HSC, HS, TD, TR, Lv, monsterLv, skill, buff}, normal = true) => {
+    const Damage = ({A, SA, CAC, CAD, BAP, BAD, HSC, HS, TD, TR, Lv, monsterLv, skill, buff}, normal = true) => {
         let seniority = Math.max(Lv - monsterLv - 5, 0);
         let NTD = Math.max(TD - TR, 0);
-        CAC += buff?.CAC || 0;
-        [CAC, CAD] = TD === 0 ? [Math.min(CAC, 100), CAD] : [Math.min(Math.max(0, CAC - 20), 100), Math.max(-50, CAD - 250)];
+        CAC += buff?.CAC || 0, BAD += buff?.BAD || 0;
+        [CAC, CAD, BAD] = TD === 0 ? [Math.min(CAC, 100), CAD, BAD] : 
+            [Math.min(Math.max(0, CAC - 20), 100), Math.max(-50, CAD - 250), Math.max(-30, CAD - 50)];
         
         let damage = {};
         damage.HS = Damage.HS(HS, NTD, buff, normal);
         damage.basic = Damage.basic(A, SA, skill, NTD, seniority, buff, normal);
-        damage.critical = Damage.critical(damage.basic, CAD);
-        damage.average = Damage.average(damage.basic, CAC, damage.critical, HSC, damage.HS);
+        damage.critical = Damage.critical(CAD);
+        damage.back = Damage.back(BAD);
+        damage.average = Damage.average(damage.basic, CAC, damage.critical, HSC, damage.HS, BAP, damage.back);
         return damage;
     }
     Object.assign(Damage, {
@@ -57,9 +59,12 @@
             (normal ? A*Damage.normal : (A+SA)*Damage.special) * (1 + buff.A/100) * skill * (1 + .02*seniority) * (1 - NTD/100),
 
         HS: (HS, NTD, buff, normal) => HS * (1 + buff.HS/100) * (1 - NTD/100) * normal,
-        critical: (basic, CAD) => basic * Math.max(1, 1.5 + CAD/100),
-        average: (basic, CAC, critical, HSC, HS) => CAC/100*critical + (1 - CAC/100)*basic + HSC/100*HS,
-
+        critical: (CAD) => Math.max(1, 1.5 + CAD/100),
+        back: (BAD) => Math.max(1, 1.3 + BAD/100),
+        average: (basic, CAC, critical, HSC, HS, BAP, BAD) => {
+            let afterCritical = CAC/100*critical*basic + (1 - CAC/100)*basic;
+            return BAP/100*afterCritical*BAD + (1 - BAP/100)*afterCritical + HSC/100*HS
+        },
         normal: .0168, special: .005469
     });
 </script>
